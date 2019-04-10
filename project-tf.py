@@ -105,8 +105,9 @@ sess.run(iterator_training_init_op)
 n_iterations = 200
 
 start_time = time.time()
+
 for i in range(n_iterations):
-    start_time = time.time()
+
     _, train_loss, train_accuracy = sess.run([optimizer, cost, accuracy])
     print("Iteration:" + str(i) + "\t| Loss =" + str(train_loss) + "\t| Accuracy =" + str(train_accuracy))
 
@@ -127,4 +128,4 @@ test_time = start_time - time.time()
 print("\nAccuracy on test set:", test_accuracy/52)
 test_time = time.time() - start_time
 
-print("training time: " + str(test_time))
+print("test time: " + str(test_time))
