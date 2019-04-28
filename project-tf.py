@@ -5,6 +5,8 @@ from __future__ import absolute_import, division, print_function
 import tensorflow as tf
 import numpy as np
 import time
+from scipy import misc
+
 tf.logging.set_verbosity(tf.logging.INFO)
 
 
@@ -34,6 +36,35 @@ def create_dataset(file_names, batch_size=64, prefetch=2):
     
     # Maps the parser on every filepath in the array. You can set the number of parallel loaders here
     dataset = dataset.map(_parse_function, num_parallel_calls=8)
+    
+    # This dataset will go on forever
+    dataset = dataset.repeat()
+    
+    # Set the number of datapoints you want to load and shuffle 
+    #dataset = dataset.shuffle(2000)
+    
+    # Set the batchsize
+    dataset = dataset.batch(batch_size)
+    
+    dataset = dataset.prefetch(buffer_size=prefetch)
+    
+    return dataset
+
+
+def inference_dataset(image_names):
+    
+    num_images = len(image_names)
+    
+    images = np.zeros([num_images, 480,640], dtype=np.uint8)
+    for i in range(num_images):
+        image = misc.imread(num_images)
+        image = np.asarray(image, np.uint8)
+        images[i,:,:] = image
+    
+    img_tensor = tf.image.convert_image_dtype(images, dtype=tf.float32)
+    dataset = tf.data.Dataset.from_tensor_slices(images))
+    
+    
     
     # This dataset will go on forever
     dataset = dataset.repeat()
