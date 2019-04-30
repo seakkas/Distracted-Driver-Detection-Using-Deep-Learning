@@ -6,7 +6,6 @@ import tensorflow as tf
 import glob
 from random import shuffle
 import cv2
-# image supposed to have shape: 480 x 640 x 3 = 921600
 
 def _int64_feature(value):
   return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
@@ -17,9 +16,14 @@ def _bytes_feature(value):
 def get_image_binary(filename):
     image = cv2.imread(filename)
     image = cv2.resize(image, dsize=(320, 240), interpolation=cv2.INTER_CUBIC)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # if gray scale wanted
+    #image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
     image = np.asarray(image, np.uint8)
-    image = np.expand_dims(image,axis=0)
+
+    # this required if image is grayscale
+    #image = np.expand_dims(image,axis=0)
 
     shape = np.array(image.shape, np.int32)
     return shape.tobytes(), image.tobytes() # convert image to raw data bytes in the array.
@@ -41,9 +45,8 @@ def write_to_tfrecord(images, tfrecord_file):
 
 
 # get all image files
-# test images don't have labels. So, I use some portion of the images
-# as test test
-train_images = glob.glob('dataset/train/*/*.jpg')
+# generated images are created by merging. 2 images are split 3:5
+train_images = glob.glob('dataset/train/*/*.jpg') + glob.glob('dataset/generated/*/*.jpg')
 
 # shuffle images
 shuffle(train_images)
@@ -55,9 +58,10 @@ shuffle(train_images)
 #train_images = images[:num_train_images]
 #test_images = images[num_train_images:]
 
+print('This operation will take some time')
 
-print('training examples:',len(train_images))
 write_to_tfrecord(train_images,'train.tfrecords')
+print('training examples:',len(train_images))
 
 test_images = glob.glob('dataset/hand-labeled/*/*.jpg')
 shuffle(test_images)

@@ -60,6 +60,7 @@ def model_fn(features, labels, mode, params):
 
 	# Dense Layer
 	flat = tf.layers.flatten(pool4)
+	print('my_flaaaaatttt::',flat)
 	training = (mode == tf.estimator.ModeKeys.TRAIN)
 	dense1 = tf.layers.dense(inputs=flat, units=1024, activation=tf.nn.relu, kernel_initializer=xav_init)
 	dropout1 = tf.layers.dropout(inputs=dense1, rate=0.4, training=training)
@@ -129,21 +130,18 @@ params = {"learning_rate": 1e-4}
 
 
 
-# to use multiple GPU
-distribution = tf.contrib.distribute.MirroredStrategy(
-	["/device:GPU:0", "/device:GPU:1", "/device:GPU:2", "/device:GPU:3", 
-	"/device:GPU:4", "/device:GPU:5", "/device:GPU:6", "/device:GPU:7"])
-config = tf.estimator.RunConfig(train_distribute=distribution, eval_distribute=distribution)
+config = tf.estimator.RunConfig().replace(session_config=
+	tf.ConfigProto(log_device_placement=True, device_count={'GPU': 0}))
 config = config.replace(save_summary_steps=5)
 
-hook = tf.train.ProfilerHook(save_steps=5, output_dir="checkpoints/model_1/", show_memory=True)
+
 model = tf.estimator.Estimator(model_fn=model_fn, config=config,
 	params=params, model_dir="checkpoints/model_1/")
 
 
 
 
-model.train(input_fn=train_input_fn, steps=3000, hooks=[hook])
+model.train(input_fn=train_input_fn, steps=5000)
 
 
 result = model.evaluate(input_fn=test_input_fn)

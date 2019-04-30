@@ -1,5 +1,7 @@
-# ignore images
-images/
+# ignore folders
+dataset/
+checkpoints/
+models/
 
 #ignore tfrecords
 *.tfrecords
