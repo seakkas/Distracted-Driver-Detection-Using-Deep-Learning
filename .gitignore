@@ -2,6 +2,11 @@
 dataset/
 checkpoints/
 models/
-
+inception/bottleneck_dir/
+inception/intermediate_output_graphs_dir
+inception/inception-v4-model 
+inception/output_graph/
+inception/output_labels/
+inception/summaries_dir/
 #ignore tfrecords
 *.tfrecords
