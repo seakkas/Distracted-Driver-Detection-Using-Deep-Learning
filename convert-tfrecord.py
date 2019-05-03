@@ -1,11 +1,24 @@
 # -*- coding: utf-8 -*-
 
-
+import sys
 import numpy as np
 import tensorflow as tf
 import glob
 from random import shuffle
 import cv2
+
+
+train_image_dir = sys.argv[1]
+test_image_dir = sys.argv[2]
+
+# where to save tfrecord files
+target_dir = sys.argv[3]
+
+if len(sys.argv) != 4:
+  print('one or more arguments missing! Please check arguments.')
+  sys.exit()
+
+
 
 def _int64_feature(value):
   return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
@@ -46,7 +59,7 @@ def write_to_tfrecord(images, tfrecord_file):
 
 # get all image files
 # generated images are created by merging. 2 images are split 3:5
-train_images = glob.glob('dataset/train/*/*.jpg') + glob.glob('dataset/generated/*/*.jpg')
+train_images = glob.glob(train_image_dir+'/*/*.jpg')
 
 # shuffle images
 shuffle(train_images)
@@ -60,12 +73,12 @@ shuffle(train_images)
 
 print('This operation will take some time')
 
-write_to_tfrecord(train_images,'train.tfrecords')
+write_to_tfrecord(train_images, target_dir + '/train.tfrecords')
 print('training examples:',len(train_images))
 
-test_images = glob.glob('dataset/hand-labeled/*/*.jpg')
+test_images = glob.glob(test_image_dir + '/*/*.jpg')
 shuffle(test_images)
 
-write_to_tfrecord(test_images,'test.tfrecords')
+write_to_tfrecord(test_images, target_dir + '/test.tfrecords')
 print('test examples:',len(test_images))
 

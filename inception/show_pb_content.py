@@ -1,5 +1,6 @@
 #https://stackoverflow.com/questions/35336648/list-of-tensor-names-in-graph-in-tensorflow
 
+import sys
 import tensorflow as tf
 
 def printTensors(pb_file):
@@ -17,5 +18,5 @@ def printTensors(pb_file):
     for op in graph.get_operations():
         print(op.name)
 
-
-printTensors("output_graph/output_graph.pb")
+model_file= sys.argv[1]
+printTensors(model_file)

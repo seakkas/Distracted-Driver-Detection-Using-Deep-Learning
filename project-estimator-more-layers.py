@@ -50,13 +50,19 @@ def model_fn(features, labels, mode, params):
 	conv2 = tf.layers.conv2d(inputs=pool1, filters=128, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
 	pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[3, 3], strides=3)
 	
-	conv3 = tf.layers.conv2d(inputs=pool2, filters=64, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
+	conv3 = tf.layers.conv2d(inputs=pool2, filters=128, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
 	pool3 = tf.layers.max_pooling2d(inputs=conv3, pool_size=[2, 2], strides=2)
 
-	conv4 = tf.layers.conv2d(inputs=pool3, filters=32, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
+	conv4 = tf.layers.conv2d(inputs=pool3, filters=64, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
 	pool4 = tf.layers.max_pooling2d(inputs=conv4, pool_size=[2, 2], strides=2)
 
-	flat = tf.layers.flatten(pool4)
+	conv5 = tf.layers.conv2d(inputs=pool4, filters=64, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
+	pool5 = tf.layers.max_pooling2d(inputs=conv5, pool_size=[2, 2], strides=2)
+
+	conv6 = tf.layers.conv2d(inputs=pool5, filters=32, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
+	pool6 = tf.layers.max_pooling2d(inputs=conv6, pool_size=[2, 2], strides=2)
+
+	flat = tf.layers.flatten(pool6)
 	dense1 = tf.layers.dense(inputs=flat, units=1024, activation=tf.nn.relu, kernel_initializer=xav_init)
 	dense2 = tf.layers.dense(inputs=dense1, units=256, activation=tf.nn.relu, kernel_initializer=xav_init)
 	logits = tf.layers.dense(inputs=dense2, units=10, kernel_initializer=xav_init)

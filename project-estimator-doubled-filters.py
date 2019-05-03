@@ -44,16 +44,16 @@ def model_fn(features, labels, mode, params):
 	inputs = tf.reshape(features['feature'], [-1, 240, 320, 3])
 	xav_init = tf.contrib.layers.xavier_initializer()
 
-	conv1 = tf.layers.conv2d(inputs=inputs, filters=64, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
+	conv1 = tf.layers.conv2d(inputs=inputs, filters=128, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
 	pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[3, 3], strides=3)
 
-	conv2 = tf.layers.conv2d(inputs=pool1, filters=128, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
+	conv2 = tf.layers.conv2d(inputs=pool1, filters=256, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
 	pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[3, 3], strides=3)
 	
-	conv3 = tf.layers.conv2d(inputs=pool2, filters=64, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
+	conv3 = tf.layers.conv2d(inputs=pool2, filters=128, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
 	pool3 = tf.layers.max_pooling2d(inputs=conv3, pool_size=[2, 2], strides=2)
 
-	conv4 = tf.layers.conv2d(inputs=pool3, filters=32, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
+	conv4 = tf.layers.conv2d(inputs=pool3, filters=64, kernel_size=[5, 5], padding="same", activation=tf.nn.relu, kernel_initializer=xav_init)
 	pool4 = tf.layers.max_pooling2d(inputs=conv4, pool_size=[2, 2], strides=2)
 
 	flat = tf.layers.flatten(pool4)
